@@ -1,4 +1,4 @@
-import { generateRandomTrackingCode, generateRandomOrder } from '@/tests/mocks'
+import { generateRandomOrder } from '@/tests/mocks'
 import { LoadOrderByTrackingCodeRepository } from '@/domain/contracts/database/repositories'
 import { ListOrderByTrackingCode, listOrderByTrackingCodeUseCase } from '@/domain/use-cases'
 import { FieldNotFoundError } from '@/domain/errors'
@@ -14,7 +14,7 @@ describe('listOrderByTrackingCodeUseCase', () => {
   const orderRepository = mock<LoadOrderByTrackingCodeRepository>()
 
   beforeAll(() => {
-    trackingCode = generateRandomTrackingCode()
+    trackingCode = generateRandomOrder().trackingCode
     order = generateRandomOrder()
 
     orderRepository.loadByTrackingCode.mockResolvedValue(order)
