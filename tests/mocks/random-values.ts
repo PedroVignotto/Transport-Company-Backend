@@ -10,4 +10,6 @@ export const generateRandomOrder = (): Order => ({
   createdAt: faker.date.recent()
 })
 export const generateRandomRepository = (): string => faker.database.column()
+export const generateRandomKey = (): string => faker.random.word()
+export const generateRandomValue = (): string => faker.random.words()
 export const generateRandomError = (): Error => new Error(faker.random.words())
