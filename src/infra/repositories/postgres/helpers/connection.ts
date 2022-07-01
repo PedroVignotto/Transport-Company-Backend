@@ -20,8 +20,7 @@ export class PgConnection {
   }
 
   async disconnect (): Promise<void> {
-    if (!this.connection) throw new ConnectionNotFoundError()
-    await getConnection().close()
+    if (this.connection) await getConnection().close()
     this.connection = undefined
   }
 
