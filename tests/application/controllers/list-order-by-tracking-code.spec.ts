@@ -1,5 +1,6 @@
 import { generateRandomOrder } from '@/tests/mocks'
 import { ListOrderByTrackingCodeController } from '@/application/controllers'
+import { FieldNotFoundError } from '@/domain/errors'
 
 describe('ListOrderByTrackingCodeController', () => {
   let sut: ListOrderByTrackingCodeController
@@ -20,5 +21,14 @@ describe('ListOrderByTrackingCodeController', () => {
 
     expect(listOrderByTrackingCode).toHaveBeenCalledWith({ trackingCode })
     expect(listOrderByTrackingCode).toHaveBeenCalledTimes(1)
+  })
+
+  it('Should return 400 if listOrderByTrackingCode return FieldNotFoundError', async () => {
+    listOrderByTrackingCode.mockRejectedValueOnce(new FieldNotFoundError('trackingCode'))
+
+    const { statusCode, data } = await sut.handle({ trackingCode })
+
+    expect(statusCode).toBe(400)
+    expect(data).toEqual(new FieldNotFoundError('trackingCode'))
   })
 })
