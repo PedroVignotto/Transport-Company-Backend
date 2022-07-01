@@ -44,7 +44,6 @@ describe('PgConnection', () => {
   })
 
   afterAll(async () => {
-    await sut.connect()
     await sut.disconnect()
   })
 
@@ -70,17 +69,17 @@ describe('PgConnection', () => {
 
   it('Should close connection', async () => {
     await sut.connect()
+
     await sut.disconnect()
 
     expect(closeSpy).toHaveBeenCalledWith()
     expect(closeSpy).toHaveBeenCalledTimes(1)
   })
 
-  it('Should return ConnectionNotFoundError on disconnect if connection is not found', async () => {
-    const promise = sut.disconnect()
+  it('Should not call close connection on disconnect if connection is not found', async () => {
+    await sut.disconnect()
 
     expect(closeSpy).not.toHaveBeenCalled()
-    await expect(promise).rejects.toThrow(new ConnectionNotFoundError())
   })
 
   it('Should get repository', async () => {
