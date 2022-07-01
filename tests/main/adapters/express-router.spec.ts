@@ -1,4 +1,4 @@
-import { generateRandomKey, generateRandomValue } from '@/tests/mocks'
+import { generateRandomKey, generateRandomValue, generateRandomError } from '@/tests/mocks'
 import { Controller } from '@/application/controllers'
 import { expressRouterAdapter } from '@/main/adapters'
 
@@ -10,6 +10,7 @@ describe('ExpressRouterAdapter', () => {
   let sut: RequestHandler
   let key: string
   let value: string
+  let error: Error
   let request: Request
   let response: Response
   let next: NextFunction
@@ -21,6 +22,7 @@ describe('ExpressRouterAdapter', () => {
 
     key = generateRandomKey()
     value = generateRandomValue()
+    error = generateRandomError()
     request = getMockReq({ params: { [key]: value } })
     response = getMockRes().res
     next = getMockRes().next
@@ -49,5 +51,14 @@ describe('ExpressRouterAdapter', () => {
 
     expect(response.status).toHaveBeenCalledWith(200)
     expect(response.json).toHaveBeenCalledWith({ data: value })
+  })
+
+  it('Should respond with correct statusCode and error on failure', async () => {
+    controller.handle.mockResolvedValueOnce({ statusCode: 400, data: error })
+
+    await sut(request, response, next)
+
+    expect(response.status).toHaveBeenCalledWith(400)
+    expect(response.json).toHaveBeenCalledWith({ error: error.message })
   })
 })
