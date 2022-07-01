@@ -24,6 +24,8 @@ describe('ExpressRouterAdapter', () => {
     request = getMockReq({ params: { [key]: value } })
     response = getMockRes().res
     next = getMockRes().next
+
+    controller.handle.mockResolvedValue({ statusCode: 200, data: { data: value } })
   })
 
   it('Should call handle with correct request', async () => {
@@ -40,5 +42,12 @@ describe('ExpressRouterAdapter', () => {
 
     expect(controller.handle).toHaveBeenCalledWith({})
     expect(controller.handle).toHaveBeenCalledTimes(1)
+  })
+
+  it('Should respond with correct statusCode and data on success', async () => {
+    await sut(request, response, next)
+
+    expect(response.status).toHaveBeenCalledWith(200)
+    expect(response.json).toHaveBeenCalledWith({ data: value })
   })
 })
