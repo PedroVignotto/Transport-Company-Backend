@@ -9,3 +9,4 @@ export const generateRandomOrder = (): Order => ({
   updatedAt: faker.date.recent(),
   createdAt: faker.date.recent()
 })
+export const generateRandomRepository = (): string => faker.database.column()

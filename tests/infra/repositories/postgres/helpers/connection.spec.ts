@@ -1,7 +1,8 @@
+import { generateRandomRepository } from '@/tests/mocks'
 import { PgConnection } from '@/infra/repositories/postgres/helpers'
 import { ConnectionNotFoundError } from '@/infra/repositories/postgres/errors'
 
-import { createConnection, getConnection, getConnectionManager } from 'typeorm'
+import { createConnection, Entity, getConnection, getConnectionManager, getRepository } from 'typeorm'
 import { mocked } from 'jest-mock'
 
 jest.mock('typeorm', () => ({
@@ -12,15 +13,18 @@ jest.mock('typeorm', () => ({
   createConnection: jest.fn(),
   getConnection: jest.fn(),
   getConnectionOptions: jest.fn(),
-  getConnectionManager: jest.fn()
+  getConnectionManager: jest.fn(),
+  getRepository: jest.fn()
 }))
 
 describe('PgConnection', () => {
   let sut: PgConnection
 
+  const repositorySpy: string = generateRandomRepository()
   const getConnectionManagerSpy: jest.Mock = jest.fn()
   const createConnectionSpy: jest.Mock = jest.fn()
   const getConnectionSpy: jest.Mock = jest.fn()
+  const getRepositorySpy: jest.Mock = jest.fn()
   const closeSpy: jest.Mock = jest.fn()
   const hasSpy: jest.Mock = jest.fn()
 
@@ -31,10 +35,16 @@ describe('PgConnection', () => {
     mocked(createConnection).mockImplementation(createConnectionSpy)
     getConnectionSpy.mockReturnValue({ close: closeSpy })
     mocked(getConnection).mockImplementation(getConnectionSpy)
+    getRepositorySpy.mockReturnValue(repositorySpy)
+    mocked(getRepository).mockImplementation(getRepositorySpy)
   })
 
   beforeEach(() => {
     sut = PgConnection.getInstance()
+  })
+
+  afterAll(async () => {
+    await sut.disconnect()
   })
 
   it('Should have only one instance', () => {
@@ -70,5 +80,15 @@ describe('PgConnection', () => {
 
     expect(closeSpy).not.toHaveBeenCalled()
     await expect(promise).rejects.toThrow(new ConnectionNotFoundError())
+  })
+
+  it('Should get repository', async () => {
+    await sut.connect()
+
+    const repository = sut.getRepository(Entity)
+
+    expect(repository).toBe(repositorySpy)
+    expect(getRepositorySpy).toHaveBeenCalledWith(Entity)
+    expect(getRepositorySpy).toHaveBeenCalledTimes(1)
   })
 })
