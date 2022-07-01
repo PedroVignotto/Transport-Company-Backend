@@ -9,6 +9,7 @@ import { Repository } from 'typeorm'
 
 describe('OrderRepository', () => {
   let sut: OrderRepository
+  let connection: PgConnection
   let order: Order
   let backup: IBackup
   let database: IMemoryDb
@@ -18,16 +19,21 @@ describe('OrderRepository', () => {
   beforeAll(async () => {
     order = generateRandomOrder()
 
+    connection = PgConnection.getInstance()
     database = await makeFakeDatabase()
     backup = database.backup()
-    orderRepository = PgConnection.getInstance().getRepository(Order)
-    deliveryStatusRepository = PgConnection.getInstance().getRepository(DeliveryStatus)
+    orderRepository = connection.getRepository(Order)
+    deliveryStatusRepository = connection.getRepository(DeliveryStatus)
   })
 
   beforeEach(() => {
     backup.restore()
 
     sut = new OrderRepository()
+  })
+
+  afterAll(async () => {
+    await connection.disconnect()
   })
 
   it('Should return undefined if order does not exists', async () => {
