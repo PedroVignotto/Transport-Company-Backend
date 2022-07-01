@@ -1,14 +1,18 @@
-import { ok, HttpResponse } from '@/application/helpers'
+import { ok, HttpResponse, badRequest } from '@/application/helpers'
 import { ListOrderByTrackingCode } from '@/domain/use-cases'
 
 type HttpRequest = { trackingCode: string }
-type Model = undefined
+type Model = undefined | Error
 
 export class ListOrderByTrackingCodeController {
   constructor (private readonly listOrderByTrackingCode: ListOrderByTrackingCode) {}
 
   async handle ({ trackingCode }: HttpRequest): Promise<HttpResponse<Model>> {
-    await this.listOrderByTrackingCode({ trackingCode })
-    return ok(undefined)
+    try {
+      await this.listOrderByTrackingCode({ trackingCode })
+      return ok(undefined)
+    } catch (error: any) {
+      return badRequest(error)
+    }
   }
 }
