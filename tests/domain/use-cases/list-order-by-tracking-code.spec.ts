@@ -1,6 +1,7 @@
-import { generateRandomTrackingCode } from '@/tests/mocks'
+import { generateRandomTrackingCode, generateRandomOrder } from '@/tests/mocks'
 import { LoadOrderByTrackingCodeRepository } from '@/domain/contracts/database/repositories'
 import { ListOrderByTrackingCode, listOrderByTrackingCodeUseCase } from '@/domain/use-cases'
+import { FieldNotFoundError } from '@/domain/errors'
 
 import { mock } from 'jest-mock-extended'
 
@@ -12,6 +13,8 @@ describe('listOrderByTrackingCodeUseCase', () => {
 
   beforeAll(() => {
     trackingCode = generateRandomTrackingCode()
+
+    orderRepository.loadByTrackingCode.mockResolvedValue(generateRandomOrder())
   })
 
   beforeEach(() => {
@@ -31,5 +34,13 @@ describe('listOrderByTrackingCodeUseCase', () => {
     const promise = sut({ trackingCode })
 
     await expect(promise).rejects.toThrow(new Error())
+  })
+
+  it('Should throw FieldNotFoundError if LoadOrderByTrackingCodeRepository return undefined', async () => {
+    orderRepository.loadByTrackingCode.mockResolvedValueOnce(undefined)
+
+    const promise = sut({ trackingCode })
+
+    await expect(promise).rejects.toThrow(new FieldNotFoundError('trackingCode'))
   })
 })
