@@ -1,6 +1,6 @@
 import { DeliveryStatus } from '.'
 
-import { Entity, Column, PrimaryColumn, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable } from 'typeorm'
+import { Entity, Column, PrimaryColumn, ManyToMany, JoinTable } from 'typeorm'
 
 @Entity('orders')
 export class Order {
@@ -13,10 +13,4 @@ export class Order {
   @ManyToMany(() => DeliveryStatus)
   @JoinTable({ name: 'ordersDeliveryStatus', joinColumns: [{ name: 'orderId' }], inverseJoinColumns: [{ name: 'deliveryStatusId' }] })
   deliveryStatus!: DeliveryStatus[]
-
-  @UpdateDateColumn()
-  updatedAt!: Date
-
-  @CreateDateColumn()
-  createdAt!: Date
 }
