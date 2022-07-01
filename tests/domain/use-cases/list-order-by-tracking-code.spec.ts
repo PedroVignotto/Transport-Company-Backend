@@ -1,4 +1,4 @@
-import { generateRandomOrder } from '@/tests/mocks'
+import { generateRandomError, generateRandomOrder } from '@/tests/mocks'
 import { LoadOrderByTrackingCodeRepository } from '@/domain/contracts/database/repositories'
 import { ListOrderByTrackingCode, listOrderByTrackingCodeUseCase } from '@/domain/use-cases'
 import { FieldNotFoundError } from '@/domain/errors'
@@ -10,12 +10,14 @@ describe('listOrderByTrackingCodeUseCase', () => {
   let sut: ListOrderByTrackingCode
   let trackingCode: string
   let order: Order
+  let error: Error
 
   const orderRepository = mock<LoadOrderByTrackingCodeRepository>()
 
   beforeAll(() => {
     trackingCode = generateRandomOrder().trackingCode
     order = generateRandomOrder()
+    error = generateRandomError()
 
     orderRepository.loadByTrackingCode.mockResolvedValue(order)
   })
@@ -32,11 +34,11 @@ describe('listOrderByTrackingCodeUseCase', () => {
   })
 
   it('Should rethrow if LoadOrderByTrackingCodeRepository throw', async () => {
-    orderRepository.loadByTrackingCode.mockRejectedValueOnce(new Error())
+    orderRepository.loadByTrackingCode.mockRejectedValueOnce(error)
 
     const promise = sut({ trackingCode })
 
-    await expect(promise).rejects.toThrow(new Error())
+    await expect(promise).rejects.toThrow(error)
   })
 
   it('Should throw FieldNotFoundError if LoadOrderByTrackingCodeRepository return undefined', async () => {
