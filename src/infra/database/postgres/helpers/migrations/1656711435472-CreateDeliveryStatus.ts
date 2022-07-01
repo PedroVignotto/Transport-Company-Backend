@@ -7,8 +7,7 @@ export class CreateDeliveryStatus1656711435472 implements MigrationInterface {
         name: 'deliveryStatus',
         columns: [
           { name: 'id', type: 'uuid', isPrimary: true },
-          { name: 'name', type: 'varchar' },
-          { name: 'createdAt', type: 'timestamp', default: 'now()' }
+          { name: 'name', type: 'varchar' }
         ]
       })
     )
