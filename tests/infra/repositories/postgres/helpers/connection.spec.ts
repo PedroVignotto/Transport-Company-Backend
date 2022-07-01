@@ -16,20 +16,19 @@ jest.mock('typeorm', () => ({
 
 describe('PgConnection', () => {
   let sut: PgConnection
-  let getConnectionManagerSpy: jest.Mock
-  let createConnectionSpy: jest.Mock
-  let getConnectionSpy: jest.Mock
-  let closeSpy: jest.Mock
-  let hasSpy: jest.Mock
+
+  const getConnectionManagerSpy: jest.Mock = jest.fn()
+  const createConnectionSpy: jest.Mock = jest.fn()
+  const getConnectionSpy: jest.Mock = jest.fn()
+  const closeSpy: jest.Mock = jest.fn()
+  const hasSpy: jest.Mock = jest.fn()
 
   beforeAll(() => {
-    hasSpy = jest.fn().mockReturnValue(true)
-    getConnectionManagerSpy = jest.fn().mockReturnValue({ has: hasSpy })
+    hasSpy.mockReturnValue(true)
+    getConnectionManagerSpy.mockReturnValue({ has: hasSpy })
     mocked(getConnectionManager).mockImplementation(getConnectionManagerSpy)
-    createConnectionSpy = jest.fn()
     mocked(createConnection).mockImplementation(createConnectionSpy)
-    closeSpy = jest.fn()
-    getConnectionSpy = jest.fn().mockReturnValue({ close: closeSpy })
+    getConnectionSpy.mockReturnValue({ close: closeSpy })
     mocked(getConnection).mockImplementation(getConnectionSpy)
   })
 
