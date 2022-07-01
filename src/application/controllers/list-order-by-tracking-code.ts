@@ -1,4 +1,5 @@
-import { ok, HttpResponse, badRequest } from '@/application/helpers'
+import { ok, HttpResponse, badRequest, serverError } from '@/application/helpers'
+import { FieldNotFoundError } from '@/domain/errors'
 import { ListOrderByTrackingCode } from '@/domain/use-cases'
 
 type HttpRequest = { trackingCode: string }
@@ -12,7 +13,8 @@ export class ListOrderByTrackingCodeController {
       await this.listOrderByTrackingCode({ trackingCode })
       return ok(undefined)
     } catch (error: any) {
-      return badRequest(error)
+      if (error instanceof FieldNotFoundError) return badRequest(error)
+      return serverError(error)
     }
   }
 }
