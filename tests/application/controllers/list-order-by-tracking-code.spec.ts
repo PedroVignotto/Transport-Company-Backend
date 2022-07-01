@@ -2,15 +2,20 @@ import { generateRandomOrder } from '@/tests/mocks'
 import { ListOrderByTrackingCodeController } from '@/application/controllers'
 import { ServerError } from '@/application/errors'
 import { FieldNotFoundError } from '@/domain/errors'
+import { Order } from '@/domain/models'
 
 describe('ListOrderByTrackingCodeController', () => {
   let sut: ListOrderByTrackingCodeController
   let trackingCode: string
+  let order: Order
 
   const listOrderByTrackingCode: jest.Mock = jest.fn()
 
   beforeAll(() => {
     trackingCode = generateRandomOrder().trackingCode
+    order = generateRandomOrder()
+
+    listOrderByTrackingCode.mockResolvedValue(order)
   })
 
   beforeEach(() => {
@@ -40,5 +45,12 @@ describe('ListOrderByTrackingCodeController', () => {
 
     expect(statusCode).toBe(500)
     expect(data).toEqual(new ServerError(new Error()))
+  })
+
+  it('Should return 200 with order data on success', async () => {
+    const { statusCode, data } = await sut.handle({ trackingCode })
+
+    expect(statusCode).toBe(200)
+    expect(data).toEqual(order)
   })
 })
