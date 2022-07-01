@@ -1,6 +1,7 @@
 import { makeFakeDatabase } from '@/tests/infra/database/postgres/mocks'
 import { generateRandomOrder } from '@/tests/mocks'
 import { app } from '@/main/config/app'
+import { FieldNotFoundError } from '@/domain/errors'
 import { DeliveryStatus, Order } from '@/infra/database/postgres/entities'
 import { PgConnection } from '@/infra/database/postgres/helpers'
 
@@ -42,6 +43,13 @@ describe('Order routes', () => {
       const { status } = await request(app).get(`/${order.trackingCode}`)
 
       expect(status).toBe(200)
+    })
+
+    it('Should return 400 if trackingCode does not exists', async () => {
+      const { status, body: { error } } = await request(app).get(`/${order.trackingCode}`)
+
+      expect(status).toBe(400)
+      expect(error).toBe(new FieldNotFoundError('trackingCode').message)
     })
   })
 })
