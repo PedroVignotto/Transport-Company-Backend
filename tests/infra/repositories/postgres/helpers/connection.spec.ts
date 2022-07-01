@@ -44,6 +44,7 @@ describe('PgConnection', () => {
   })
 
   afterAll(async () => {
+    await sut.connect()
     await sut.disconnect()
   })
 
@@ -90,5 +91,14 @@ describe('PgConnection', () => {
     expect(repository).toBe(repositorySpy)
     expect(getRepositorySpy).toHaveBeenCalledWith(Entity)
     expect(getRepositorySpy).toHaveBeenCalledTimes(1)
+  })
+
+  it('Should return ConnectionNotFoundError on getRepository if connection is not found', async () => {
+    await sut.connect()
+
+    await sut.disconnect()
+
+    expect(getRepositorySpy).not.toHaveBeenCalled()
+    expect(() => sut.getRepository(Entity)).toThrow(new ConnectionNotFoundError())
   })
 })
