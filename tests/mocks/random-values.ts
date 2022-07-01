@@ -11,4 +11,3 @@ export const generateRandomOrder = (): Order => ({
 })
 export const generateRandomRepository = (): string => faker.database.column()
 export const generateRandomError = (): Error => new Error(faker.random.words())
-export const generateRandomFieldName = (): string => faker.random.word()
