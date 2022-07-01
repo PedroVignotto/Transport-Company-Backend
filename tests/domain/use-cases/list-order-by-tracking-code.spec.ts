@@ -18,4 +18,12 @@ describe('listOrderByTrackingCodeUseCase', () => {
     expect(orderRepository.loadByTrackingCode).toHaveBeenCalledWith({ trackingCode: 'any_tracking_code' })
     expect(orderRepository.loadByTrackingCode).toHaveBeenCalledTimes(1)
   })
+
+  it('Should rethrow if LoadOrderByTrackingCodeRepository throw', async () => {
+    orderRepository.loadByTrackingCode.mockRejectedValueOnce(new Error())
+
+    const promise = sut({ trackingCode: 'any_tracking_code' })
+
+    await expect(promise).rejects.toThrow(new Error())
+  })
 })
