@@ -1,5 +1,5 @@
-import { Order } from '@/infra/repositories/postgres/entities'
-import { PgRepository } from '@/infra/repositories/postgres/repositories'
+import { Order } from '@/infra/database/postgres/entities'
+import { PgRepository } from '@/infra/database/postgres/repositories'
 import { LoadOrderByTrackingCodeRepository } from '@/domain/contracts/database/repositories'
 
 export class OrderRepository extends PgRepository implements LoadOrderByTrackingCodeRepository {

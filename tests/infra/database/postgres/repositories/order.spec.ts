@@ -1,8 +1,8 @@
 import { generateRandomOrder } from '@/tests/mocks'
-import { makeFakeDatabase } from '@/tests/infra/repositories/postgres/mocks'
-import { OrderRepository } from '@/infra/repositories/postgres/repositories'
-import { DeliveryStatus, Order } from '@/infra/repositories/postgres/entities'
-import { PgConnection } from '@/infra/repositories/postgres/helpers'
+import { makeFakeDatabase } from '@/tests/infra/database/postgres/mocks'
+import { OrderRepository } from '@/infra/database/postgres/repositories'
+import { DeliveryStatus, Order } from '@/infra/database/postgres/entities'
+import { PgConnection } from '@/infra/database/postgres/helpers'
 
 import { IBackup, IMemoryDb } from 'pg-mem'
 import { Repository } from 'typeorm'

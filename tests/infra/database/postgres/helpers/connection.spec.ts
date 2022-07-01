@@ -1,6 +1,6 @@
 import { generateRandomRepository } from '@/tests/mocks'
-import { PgConnection } from '@/infra/repositories/postgres/helpers'
-import { ConnectionNotFoundError } from '@/infra/repositories/postgres/errors'
+import { PgConnection } from '@/infra/database/postgres/helpers'
+import { ConnectionNotFoundError } from '@/infra/database/postgres/errors'
 
 import { createConnection, Entity, getConnection, getConnectionManager, getRepository } from 'typeorm'
 import { mocked } from 'jest-mock'
