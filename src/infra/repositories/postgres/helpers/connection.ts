@@ -15,4 +15,8 @@ export class PgConnection {
     const options = { ...defaultOptions, host: 'postgres' }
     getConnectionManager().has('default') ? getConnection() : await createConnection(options)
   }
+
+  async disconnect (): Promise<void> {
+    await getConnection().close()
+  }
 }
