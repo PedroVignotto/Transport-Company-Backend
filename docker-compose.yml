@@ -6,6 +6,8 @@ services:
     restart: always
     ports:
       - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: example
   app:
     container_name: api
     image: node:16
